@@ -1,0 +1,23 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: b15dcluster
+  region: us-east-1
+
+managedNodeGroups:
+  - name: b15d
+    spot: true
+    instanceTypes: ["m5.large"]  # Use multiple types for better availability
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    labels:
+      lifecycle: Ec2Spot
+    tags:
+      "k8s.io/cluster-autoscaler/enabled": "true"
+      "k8s.io/cluster-autoscaler/b15dcluster": "owned"
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        ebs: true
